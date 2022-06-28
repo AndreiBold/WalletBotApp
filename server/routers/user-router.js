@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
     }
 
     // hash the password
-    reqBody.password = await bcrypt.hash(reqBody.password, 15);
+    reqBody.password = await bcrypt.hash(reqBody.password, 10);
     if (!reqBody.password)
       throw Error("Something went wrong hashing the password");
 
@@ -127,9 +127,16 @@ router.post("/generateSecret", auth, async (req, res) => {
     if (user == null) throw Error("User not found");
 
     let secret = speakeasy.generateSecret();
-    qrcode.toDataURL(secret.otpauth_url, async (err, qrImage) => {
+
+    let otPauthUrl = speakeasy.otpauthURL({ secret: secret.ascii, label: user.email, algorithm: 'sha512' });
+
+    qrcode.toDataURL(otPauthUrl, async (err, qrImage) => {
       if (!err) {
-        let hashedSecret = await bcrypt.hash(getPlainSecret(secret.base32), 15);
+        const plainSecret = user.userName.charAt(0).toUpperCase() + getPlainSecret(secret.base32);
+
+        console.log("secretul unic al userului in generate: ", plainSecret);
+
+        const hashedSecret = await bcrypt.hash(plainSecret, 10);
 
         if (!hashedSecret)
           throw Error("Something went wrong hashing the secret");
@@ -164,14 +171,16 @@ router.post("/verify", auth, async (req, res) => {
     const userToken = req.body.token;
     const hashedSecret = req.body.hashedSecret;
 
-    if (!(await bcrypt.compare(plainSecretInstance, hashedSecret))) {
+    const plainSecret = user.userName.charAt(0).toUpperCase() + plainSecretInstance; 
+
+    if (!(await bcrypt.compare(plainSecret, hashedSecret))) {
       throw Error("Invalid secret");
     }
 
-    console.log("secretul in verify: ", plainSecretInstance);
+    console.log("secretul unic al userului in verify: ", plainSecret);
 
     const verified = speakeasy.totp.verify({
-      secret: plainSecretInstance,
+      secret: plainSecret,
       encoding: "base32",
       token: userToken,
     });
@@ -199,16 +208,17 @@ router.post("/validate", auth, async (req, res) => {
     if (user == null) throw Error("User not found");
 
     const userToken = req.body.token;
+    const plainSecret = user.userName.charAt(0).toUpperCase() + plainSecretInstance;
     const hashedSecret = user.secretTotp;
 
-    if (!(await bcrypt.compare(plainSecretInstance, hashedSecret))) {
+    if (!(await bcrypt.compare(plainSecret, hashedSecret))) {
       throw Error("Invalid secret");
     }
 
-    console.log("secretul in validate: ", plainSecretInstance);
+    console.log("secretul unic al userului in validate: ", plainSecret);
 
     const validated = speakeasy.totp.verify({
-      secret: plainSecretInstance,
+      secret: plainSecret,
       encoding: "base32",
       token: userToken,
     });
@@ -246,7 +256,7 @@ function getPlainSecret(plainSecret) {
   if (!plainSecretInstance) {
     plainSecretInstance = plainSecret;
   }
-  console.log("secretul in getPlainSecret: ", plainSecretInstance);
+  console.log("Secretul original: ", plainSecretInstance);
   return plainSecretInstance;
 }
 
