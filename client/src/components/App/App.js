@@ -9,10 +9,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { loadUser } from "../../actions/userActions";
 import store from "../../stores/store";
 import Home from "../Home";
-import Account from "../Account";
+import Account from "../Account/Account";
 import Friends from "../Friends";
 import TwoFactorAuth from "../Navbar/Auth/TwoFactorAuth";
 import Navbar from "../Navbar/Navbar";
+import ValidateTotp from "../Navbar/Auth/ValidateTotp";
 
 class App extends Component {
   componentDidMount() {
@@ -32,6 +33,7 @@ class App extends Component {
               <Route path="/friends" element={<Friends />} />
               <Route path="/account" element={<Account />} />
               <Route path="/verify" element={<TwoFactorAuth />} />
+              <Route path="/validate" element={<ValidateTotp />} />
             </Routes>
         </BrowserRouter>
       </div>

@@ -4,39 +4,43 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import LogOut from "./Auth/LogOut";
 import coinbot from "../../images/coinbot.png";
-import "./Navbar.css"
+import "./Navbar.css";
 import {
   FaSignInAlt,
   FaHome,
   FaRegUser,
   FaUserCircle,
-  FaUsers
+  FaUsers,
 } from "react-icons/fa";
 import { Button } from "reactstrap";
-
+import { generateSecret } from "../../actions/userActions";
+import { clearErrors } from "../../actions/errorActions";
+ 
 class Navbar extends Component {
-  // componentDidUpdate(prevProps) {
-  //   const { messageUserSecret } = this.props;
+  componentDidUpdate(prevProps) {
+    const { messageUserSecret } = this.props;
 
-  //   if (
-  //     messageUserSecret !== prevProps.messageUserSecret &&
-  //     messageUserSecret === "Secret generated successfully!"
-  //   ) {
-  //     // this.props.history.push("/verify");
-  //     window.location.replace("/verify");
-  //   } else {
-  //     console.log("HELP");
-  //   }
-  // }
+    if (
+      messageUserSecret !== prevProps.messageUserSecret &&
+      messageUserSecret === "Secret generated successfully!"
+    ) {
+      window.location.replace("/verify");
+      console.log('GOOD');
+    } else {
+      console.log("HELP");
+    }
+  }
 
   static propTypes = {
     user: PropTypes.object.isRequired,
-    // generateSecret: PropTypes.func.isRequired,
+    generateSecret: PropTypes.func.isRequired,
+    messageUserSecret: PropTypes.string,
+    clearErrors: PropTypes.func.isRequired
   };
 
   enableTwoFactAuth = () => {
-    // this.props.generateSecret();
-    console.log('generate secret');
+    this.props.generateSecret();
+    console.log("generate secret");
   };
 
   render() {
@@ -47,7 +51,7 @@ class Navbar extends Component {
         <ul className="navbar-nav mr-auto">
           <li className="nav-item mr-3">
             <Link to="/" className="nav-link text-white">
-            <FaHome /> Home
+              <FaHome /> Home
             </Link>
           </li>
           <li className="nav-item mr-3">
@@ -69,9 +73,11 @@ class Navbar extends Component {
                 : ""}
             </strong>
           </span>
-          <li className="nav-item mr-3">
-            <Button onClick={() => this.enableTwoFactAuth()}>Enable 2FA</Button>
-          </li>
+          {userData && !userData.isTwoFactorAuthEnabled ? (<li className="nav-item mr-3">
+            <Button onClick={() => this.enableTwoFactAuth()}>
+              Enable 2FA
+            </Button>
+          </li>) : null}
           <li className="nav-item mr-3">
             <LogOut />
           </li>
@@ -130,7 +136,7 @@ class Navbar extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  // generatedSecret: state.user.generateSecret
+  messageUserSecret: state.user.message
 });
 
-export default connect(mapStateToProps, null)(Navbar);
+export default connect(mapStateToProps, {generateSecret, clearErrors})(Navbar);

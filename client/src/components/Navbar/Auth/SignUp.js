@@ -35,7 +35,7 @@ class SignUp extends Component {
     }
 
     if (isAuthenticated !== prevProps.isAuthenticated && isAuthenticated) {
-      this.props.history.push("/");
+      window.location.replace("/");
     }
   }
 

@@ -4,11 +4,11 @@ const bcrypt = require("bcrypt");
 const models = require("../models");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
-const JWT_SECRET = process.env.JWT_SECRET;
 const speakeasy = require("speakeasy");
 const qrcode = require("qrcode");
-
-var plainSecretInstance;
+const cryptojs = require("crypto-js");
+const JWT_SECRET = process.env.JWT_SECRET;
+const SPEAKEASY_SECRET_KEY = process.env.SPEAKEASY_SECRET_KEY;
 
 // @route  POST users/
 // @desc   Register new user
@@ -126,24 +126,17 @@ router.post("/generateSecret", auth, async (req, res) => {
 
     if (user == null) throw Error("User not found");
 
-    let secret = speakeasy.generateSecret();
+    const secret = speakeasy.generateSecret({ length: 20, name: user.email });
 
-    let otPauthUrl = speakeasy.otpauthURL({ secret: secret.ascii, label: user.email, algorithm: 'sha512' });
+    const encryptedSecret = cryptojs.AES.encrypt(secret.base32, SPEAKEASY_SECRET_KEY).toString();
 
-    qrcode.toDataURL(otPauthUrl, async (err, qrImage) => {
+    if(!encryptedSecret) throw Error("Something went wrong encrypting the secret");
+
+    qrcode.toDataURL(secret.otpauth_url, async (err, qrImage) => {
       if (!err) {
-        const plainSecret = user.userName.charAt(0).toUpperCase() + getPlainSecret(secret.base32);
-
-        console.log("secretul unic al userului in generate: ", plainSecret);
-
-        const hashedSecret = await bcrypt.hash(plainSecret, 10);
-
-        if (!hashedSecret)
-          throw Error("Something went wrong hashing the secret");
-
         res.status(201).json({
           qr: qrImage,
-          hashedSecret: hashedSecret,
+          secret: encryptedSecret,
           message: "Secret generated successfully!",
         });
       } else {
@@ -169,23 +162,22 @@ router.post("/verify", auth, async (req, res) => {
     if (user == null) throw Error("User not found");
 
     const userToken = req.body.token;
-    const hashedSecret = req.body.hashedSecret;
+    const userSecret = req.body.secret;
 
-    const plainSecret = user.userName.charAt(0).toUpperCase() + plainSecretInstance; 
+    const bytesSecret = cryptojs.AES.decrypt(userSecret, SPEAKEASY_SECRET_KEY);
+    if(!bytesSecret) throw Error("Something went wrong decrypting the secret");
 
-    if (!(await bcrypt.compare(plainSecret, hashedSecret))) {
-      throw Error("Invalid secret");
-    }
+    const decryptedSecret = bytesSecret.toString(cryptojs.enc.Utf8);
+    if(!decryptedSecret) throw Error("Something went wrong decoding the secret");
 
-    console.log("secretul unic al userului in verify: ", plainSecret);
 
     const verified = speakeasy.totp.verify({
-      secret: plainSecret,
+      secret: decryptedSecret,
       encoding: "base32",
       token: userToken,
     });
     if (verified) {
-      user.update({ secretTotp: hashedSecret, isTwoFactorAuthEnabled: true });
+      user.update({ secretTotp: userSecret, isTwoFactorAuthEnabled: true });
       res.status(201).json({ verified: true });
     } else {
       res.status(201).json({ verified: false });
@@ -208,17 +200,13 @@ router.post("/validate", auth, async (req, res) => {
     if (user == null) throw Error("User not found");
 
     const userToken = req.body.token;
-    const plainSecret = user.userName.charAt(0).toUpperCase() + plainSecretInstance;
-    const hashedSecret = user.secretTotp;
+    const userSecret = user.secretTotp;
 
-    if (!(await bcrypt.compare(plainSecret, hashedSecret))) {
-      throw Error("Invalid secret");
-    }
-
-    console.log("secretul unic al userului in validate: ", plainSecret);
+    const bytesSecret = cryptojs.AES.decrypt(userSecret, SPEAKEASY_SECRET_KEY);
+    const decryptedSecret = bytesSecret.toString(cryptojs.enc.Utf8);
 
     const validated = speakeasy.totp.verify({
-      secret: plainSecret,
+      secret: decryptedSecret,
       encoding: "base32",
       token: userToken,
     });
@@ -251,13 +239,5 @@ router.get("/user", auth, async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 });
-
-function getPlainSecret(plainSecret) {
-  if (!plainSecretInstance) {
-    plainSecretInstance = plainSecret;
-  }
-  console.log("Secretul original: ", plainSecretInstance);
-  return plainSecretInstance;
-}
 
 module.exports = router;

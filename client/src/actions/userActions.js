@@ -11,6 +11,10 @@ import {
   LOGIN_FAIL,
   GENERATE_SECRET_SUCCESS,
   GENERATE_SECRET_FAIL,
+  VERIFY_SUCCESS,
+  VERIFY_FAIL,
+  VALIDATE_SUCCESS,
+  VALIDATE_FAIL
 } from "./types";
 
 // Check token & load user
@@ -96,11 +100,10 @@ export const login = ({ email, password }) => (dispatch) => {
 
 // Generate secret for second auth factor
 export const generateSecret = () => (dispatch, getState) => {
-  console.log('STATE: ', getState);
   axios
     .post("/users/generateSecret", {}, tokenConfig(getState))
     .then((res) => {
-      console.log('RES: ', res);
+      console.log('RES generate secret: ', res.data.secret);
       dispatch({
         type: GENERATE_SECRET_SUCCESS,
         payload: res.data,
@@ -117,6 +120,67 @@ export const generateSecret = () => (dispatch, getState) => {
       );
       dispatch({
         type: GENERATE_SECRET_FAIL,
+      });
+    });
+};
+
+// Verify token first time
+export const verify = ({token, secret}) => (dispatch, getState) => {
+  console.log('totp: ' + token);
+  console.log('secret discret: ' + secret);
+  //Request body
+  const body = JSON.stringify({ token, secret });
+
+  axios
+    .post("/users/verify", body, tokenConfig(getState))
+    .then((res) => {
+      console.log('RES: ', res);
+      dispatch({
+        type: VERIFY_SUCCESS,
+        payload: res.data,
+      })
+    }
+    )
+    .catch((err) => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          "VERIFY_FAIL"
+        )
+      );
+      dispatch({
+        type: VERIFY_FAIL,
+      });
+    });
+};
+
+// Validate token every time user logs in
+export const validate = ({token}) => (dispatch, getState) => {
+  console.log('totp: ' + token);
+  //Request body
+  const body = JSON.stringify({ token });
+
+  axios
+    .post("/users/validate", body, tokenConfig(getState))
+    .then((res) => {
+      console.log('RES: ', res);
+      dispatch({
+        type: VALIDATE_SUCCESS,
+        payload: res.data,
+      })
+    }
+    )
+    .catch((err) => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          "VALIDATE_FAIL"
+        )
+      );
+      dispatch({
+        type: VALIDATE_FAIL,
       });
     });
 };

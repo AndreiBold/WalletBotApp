@@ -4,14 +4,7 @@ import PropTypes from "prop-types";
 import { login } from "../../../actions/userActions";
 import { clearErrors } from "../../../actions/errorActions";
 import "./LogIn.css";
-import {
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Alert,
-} from "reactstrap";
+import { Button, Form, FormGroup, Label, Input, Alert } from "reactstrap";
 import { FaSignInAlt } from "react-icons/fa";
 
 class LogIn extends Component {
@@ -26,10 +19,11 @@ class LogIn extends Component {
     error: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
     clearErrors: PropTypes.func.isRequired,
+    userData: PropTypes.object,
   };
 
   componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props;
+    const { error, isAuthenticated, userData } = this.props;
     if (error !== prevProps.error) {
       // Check for login error
       if (error.id === "LOGIN_FAIL") {
@@ -40,7 +34,11 @@ class LogIn extends Component {
     }
 
     if (isAuthenticated !== prevProps.isAuthenticated && isAuthenticated) {
-        this.props.history.push("/");
+      if (userData.isTwoFactorAuthEnabled) {
+        window.location.replace("/validate");
+      } else {
+        window.location.replace("/");
+      }
     }
   }
 
@@ -72,44 +70,41 @@ class LogIn extends Component {
   render() {
     return (
       <div className="login-container">
-            {this.state.msg ? (
-              <Alert color="danger">{this.state.msg}</Alert>
-            ) : null}
-            <h3><FaSignInAlt/> Login</h3>
-            <Form onSubmit={this.handleSubmit}>
-              <FormGroup>
-                <Label for="email">Email Address</Label>
-                <Input
-                  type="text"
-                  name="email"
-                  id="email"
-                  placeholder="Email Address"
-                  className="mb-3"
-                  onChange={this.handleChange}
-                  value={this.state.email}
-                  style={{ margin: "0 auto", width: "70%" }}
-                />
+        {this.state.msg ? <Alert color="danger">{this.state.msg}</Alert> : null}
+        <h3>
+          <FaSignInAlt /> Login
+        </h3>
+        <Form onSubmit={this.handleSubmit}>
+          <FormGroup>
+            <Label for="email">Email Address</Label>
+            <Input
+              type="text"
+              name="email"
+              id="email"
+              placeholder="Email Address"
+              className="mb-3"
+              onChange={this.handleChange}
+              value={this.state.email}
+              style={{ margin: "0 auto", width: "70%" }}
+            />
 
-                <Label for="password">Password</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  className="mb-3"
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                  style={{ margin: "0 auto", width: "70%" }}
-                />
+            <Label for="password">Password</Label>
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Password"
+              className="mb-3"
+              onChange={this.handleChange}
+              value={this.state.password}
+              style={{ margin: "0 auto", width: "70%" }}
+            />
 
-                <Button
-                  type="submit"
-                  className="login-btn"
-                >
-                  Login
-                </Button>
-              </FormGroup>
-            </Form>
+            <Button type="submit" className="login-btn">
+              Login
+            </Button>
+          </FormGroup>
+        </Form>
       </div>
     );
   }
@@ -117,6 +112,7 @@ class LogIn extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.user.isAuthenticated,
+  userData: state.user.userData,
   error: state.error,
 });
 

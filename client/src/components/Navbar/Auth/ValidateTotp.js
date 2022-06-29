@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { verify } from "../../../actions/userActions";
+import { validate } from "../../../actions/userActions";
 import { clearErrors } from "../../../actions/errorActions";
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   Input,
   Alert,
 } from "reactstrap";
-import "./TwoFactorAuth.css";
+import "./ValidateTotp.css";
 
 class TwoFactorAuth extends Component {
   state = {
@@ -21,7 +21,7 @@ class TwoFactorAuth extends Component {
 
   static propTypes = {
     error: PropTypes.object.isRequired,
-    verify: PropTypes.func.isRequired,
+    validate: PropTypes.func.isRequired,
     clearErrors: PropTypes.func.isRequired,
     isTwoFactorEnabled: PropTypes.bool
   };
@@ -29,8 +29,8 @@ class TwoFactorAuth extends Component {
   componentDidUpdate(prevProps) {
     const { isTwoFactorEnabled, error } = this.props;
     if (error !== prevProps.error) {
-      // Check for verify error
-      if (error.id === "VERIFY_FAIL") {
+      // Check for validate error
+      if (error.id === "VALIDATE_FAIL") {
         this.setState({ msg: error.msg.message });
       } else {
         this.setState({ msg: null });
@@ -55,15 +55,13 @@ class TwoFactorAuth extends Component {
     event.preventDefault();
 
     const { token } = this.state;
-    const secret = localStorage.getItem('secret');
 
     const body = {
       token,
-      secret,
     };
 
-    // Attempt to verify
-    this.props.verify(body);
+    // Attempt to validate
+    this.props.validate(body);
 
     this.setState({
       token: "",
@@ -72,12 +70,11 @@ class TwoFactorAuth extends Component {
 
   render() {
     return (
-      <div className="verify-container">
+      <div className="validate-container">
             {this.state.msg ? (
               <Alert color="danger">{this.state.msg}</Alert>
             ) : null}
-            <h3>Verify Totp Token</h3>
-            <img src={localStorage.getItem('qrcode')}/>
+            <h3>Validate Totp Token</h3>
 
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
@@ -95,9 +92,9 @@ class TwoFactorAuth extends Component {
 
                 <Button
                   type="submit"
-                  className="verify-btn"
+                  className="validate-btn"
                 >
-                  Verify
+                  Validate
                 </Button>
               </FormGroup>
             </Form>
@@ -111,4 +108,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, { verify, clearErrors })(TwoFactorAuth);
+export default connect(mapStateToProps, { validate, clearErrors })(TwoFactorAuth);

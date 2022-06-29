@@ -1,3 +1,17 @@
 .App {
   text-align: center;
+  background: #f9dd59;
+  background: -webkit-linear-gradient(top left, #f9dd59, #fff0a8);
+  background: -moz-linear-gradient(top left, #f9dd59, #fff0a8);
+  background: linear-gradient(to bottom right, #f9dd59, #fff0a8);
+  padding-bottom: 90vh;
+  height: 100%;
+}
+#root {
+  width: 100%;
+  height: 100%;
+}
+body {
+  width: 100%;
+  height: 100%;
 }

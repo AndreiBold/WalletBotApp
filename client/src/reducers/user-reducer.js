@@ -8,7 +8,11 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   GENERATE_SECRET_SUCCESS,
-  GENERATE_SECRET_FAIL
+  GENERATE_SECRET_FAIL,
+  VERIFY_SUCCESS,
+  VERIFY_FAIL,
+  VALIDATE_SUCCESS,
+  VALIDATE_FAIL
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -17,7 +21,9 @@ const INITIAL_STATE = {
   isLoading: false,
   userData: null,
   message: "",
-  generatedSecret: null,
+  generatedSecret: localStorage.getItem("secret"),
+  qrImage: localStorage.getItem("qrcode"),
+  isTwoFactorEnabled: null
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -47,8 +53,12 @@ export default function(state = INITIAL_STATE, action) {
     case LOGIN_FAIL:
     case REGISTER_FAIL:
     case GENERATE_SECRET_FAIL:
+    case VERIFY_FAIL:
     case LOGOUT_SUCCESS:
+    case VALIDATE_FAIL:
       localStorage.removeItem("token");
+      localStorage.removeItem("secret");
+      localStorage.removeItem("qrcode");
       return {
         ...state,
         token: null,
@@ -56,15 +66,25 @@ export default function(state = INITIAL_STATE, action) {
         isAuthenticated: false,
         isLoading: false,
         message: "",
-        generatedSecret: null
+        generatedSecret: null,
+        qrImage: null
       };
     case GENERATE_SECRET_SUCCESS:
+      localStorage.setItem('secret', action.payload.secret)
+      localStorage.setItem('qrcode', action.payload.qr);
       return {
         ...state,
-        generatedSecret: action.payload,
+        generatedSecret: action.payload.hashedSecret,
         isAuthenticated: true,
         isLoading: false,
-        message: action.payload.message
+        message: action.payload.message,
+        qrImage: action.payload.qr
+      }
+    case VERIFY_SUCCESS: 
+    case VALIDATE_SUCCESS:
+      return {
+        ...state,
+        isTwoFactorEnabled: true
       }
     default:
       return state;
