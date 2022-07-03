@@ -8,7 +8,7 @@ import LogOut from "../Navbar/Auth/LogOut";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { loadUser } from "../../actions/userActions";
 import store from "../../stores/store";
-import Home from "../Home";
+import Home from "../Home/Home";
 import Account from "../Account/Account";
 import ContactList from "../Contacts/ContactList";
 import TwoFactorAuth from "../Navbar/Auth/TwoFactorAuth";

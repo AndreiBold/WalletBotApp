@@ -9,6 +9,8 @@ app.use(cors({origin: "https://localhost:3000"}));
 
 app.use("/users", routers.user);
 app.use("/contacts", routers.contact);
+app.use("/chat", routers.chat);
+app.use("/addresses", routers.address);
 
 const https = require("https");
 const fs = require("fs");

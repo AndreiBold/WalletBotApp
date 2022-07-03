@@ -34,5 +34,9 @@ db.User.hasMany(db.Contact, {
   foreignKey: "userId",
   target: "userId"
 });
+db.User.hasMany(db.Address, {
+  foreignKey: "userId",
+  target: "userId"
+});
 
 module.exports = db;
