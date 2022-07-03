@@ -5,9 +5,10 @@ const routers = require("./routers");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({origin: "https://localhost:3000"}));
 
 app.use("/users", routers.user);
+app.use("/contacts", routers.contact);
 
 const https = require("https");
 const fs = require("fs");

@@ -70,8 +70,8 @@ class SignUp extends Component {
   render() {
     return (
       <div className="signup-container">
-        {this.state.msgError ? (
-          <Alert color="danger">{this.state.msgError}</Alert>
+        {this.state.msg ? (
+          <Alert color="danger">{this.state.msg}</Alert>
         ) : null}
         <h3><FaRegUser /> Register</h3>
         <Form onSubmit={this.handleSubmit}>

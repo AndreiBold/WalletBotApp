@@ -27,6 +27,12 @@ fs.readdirSync(__dirname).forEach((file) => {
 });
 
 //create tables
-sequelize.sync({ force: true });
+sequelize.sync();
+
+//setting relations between tables
+db.User.hasMany(db.Contact, {
+  foreignKey: "userId",
+  target: "userId"
+});
 
 module.exports = db;

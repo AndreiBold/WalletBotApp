@@ -13,7 +13,7 @@ class LogOut extends Component {
     return (
       <div>
         <Link
-          to="/logout"
+          to="/"
           onClick={this.props.logout}
           className="nav-link text-white"
         >

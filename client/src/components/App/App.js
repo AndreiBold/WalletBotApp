@@ -10,7 +10,7 @@ import { loadUser } from "../../actions/userActions";
 import store from "../../stores/store";
 import Home from "../Home";
 import Account from "../Account/Account";
-import Friends from "../Friends";
+import ContactList from "../Contacts/ContactList";
 import TwoFactorAuth from "../Navbar/Auth/TwoFactorAuth";
 import Navbar from "../Navbar/Navbar";
 import ValidateTotp from "../Navbar/Auth/ValidateTotp";
@@ -30,7 +30,7 @@ class App extends Component {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<LogIn />} />
               <Route path="/logout" element={<LogOut />} />
-              <Route path="/friends" element={<Friends />} />
+              <Route path="/contacts" element={<ContactList />} />
               <Route path="/account" element={<Account />} />
               <Route path="/verify" element={<TwoFactorAuth />} />
               <Route path="/validate" element={<ValidateTotp />} />

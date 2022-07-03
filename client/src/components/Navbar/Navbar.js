@@ -17,6 +17,14 @@ import { generateSecret } from "../../actions/userActions";
 import { clearErrors } from "../../actions/errorActions";
  
 class Navbar extends Component {
+
+  static propTypes = {
+    user: PropTypes.object.isRequired,
+    generateSecret: PropTypes.func.isRequired,
+    messageUserSecret: PropTypes.string,
+    clearErrors: PropTypes.func.isRequired,
+  };
+
   componentDidUpdate(prevProps) {
     const { messageUserSecret } = this.props;
 
@@ -30,13 +38,6 @@ class Navbar extends Component {
       console.log("HELP");
     }
   }
-
-  static propTypes = {
-    user: PropTypes.object.isRequired,
-    generateSecret: PropTypes.func.isRequired,
-    messageUserSecret: PropTypes.string,
-    clearErrors: PropTypes.func.isRequired
-  };
 
   enableTwoFactAuth = () => {
     this.props.generateSecret();
@@ -55,8 +56,8 @@ class Navbar extends Component {
             </Link>
           </li>
           <li className="nav-item mr-3">
-            <Link to="/friends" className="nav-link text-white">
-              <FaUsers /> Friends
+            <Link to="/contacts" className="nav-link text-white">
+              <FaUsers /> Contacts
             </Link>
           </li>
           <li className="nav-item mr-3">

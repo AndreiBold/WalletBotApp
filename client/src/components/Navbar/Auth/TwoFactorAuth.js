@@ -23,7 +23,7 @@ class TwoFactorAuth extends Component {
     error: PropTypes.object.isRequired,
     verify: PropTypes.func.isRequired,
     clearErrors: PropTypes.func.isRequired,
-    isTwoFactorEnabled: PropTypes.bool
+    isTwoFactorEnabled: PropTypes.bool,
   };
 
   componentDidUpdate(prevProps) {
