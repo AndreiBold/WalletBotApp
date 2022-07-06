@@ -39,6 +39,7 @@ span {
 
 .copy-icon {
   margin-left: 1rem;
+  cursor: pointer;
 }
 
 .guest-message {

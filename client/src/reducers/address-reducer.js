@@ -26,6 +26,7 @@ export default function (state = INITIAL_STATE, action) {
         loading: false,
       };
     case GET_ADDRESS_SUCCESS:
+      console.log('GG: ' + action.payload.address);
       return {
         ...state,
         selectedAddress: action.payload.address,

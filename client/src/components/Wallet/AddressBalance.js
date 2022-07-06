@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Web3API from "../../config/web3Provider";
+import { FaCoins } from "react-icons/fa";
 
 class AddressBalance extends Component {
   state = {
@@ -25,7 +26,7 @@ class AddressBalance extends Component {
   render() {
     return (
       <div>
-        <span>{this.state.balance} ETH</span>
+        <span><FaCoins /> {this.state.balance} ETH</span>
       </div>
     );
   }

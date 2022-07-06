@@ -14,6 +14,7 @@ import ContactList from "../Contacts/ContactList";
 import TwoFactorAuth from "../Navbar/Auth/TwoFactorAuth";
 import Navbar from "../Navbar/Navbar";
 import ValidateTotp from "../Navbar/Auth/ValidateTotp";
+import AddressPage from "../Wallet/AddressPage";
 
 class App extends Component {
   componentDidMount() {
@@ -34,6 +35,7 @@ class App extends Component {
               <Route path="/account" element={<Account />} />
               <Route path="/verify" element={<TwoFactorAuth />} />
               <Route path="/validate" element={<ValidateTotp />} />
+              <Route path="/addresses/:hexValue" element={<AddressPage />} />
             </Routes>
         </BrowserRouter>
       </div>

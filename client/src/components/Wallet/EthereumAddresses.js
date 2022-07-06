@@ -4,7 +4,12 @@ import { connect } from "react-redux";
 import { getAddresses } from "../../actions/addressActions";
 import PropTypes from "prop-types";
 import "./EthereumAddresses.css";
-import { FaEthereum, FaRocket, FaCopy, FaWallet } from "react-icons/fa";
+import {
+  FaEthereum,
+  FaRocket,
+  FaCopy,
+  FaWallet,
+} from "react-icons/fa";
 import AddressBalance from "./AddressBalance";
 
 class EthereumAddresses extends Component {
@@ -44,6 +49,11 @@ class EthereumAddresses extends Component {
     });
   };
 
+  navigateToAddressPage = (hexAddress) => {
+    window.location.replace(`/addresses/${hexAddress}`);
+    localStorage.setItem("eth-address", hexAddress);
+  };
+
   render() {
     const { addresses } = this.props.address;
 
@@ -55,7 +65,11 @@ class EthereumAddresses extends Component {
         <Container className="wallet-addresses-section">
           <ListGroup className="address-list">
             {addresses.map(({ hexValue, name }) => (
-              <ListGroupItem key={hexValue} className="address-info">
+              <ListGroupItem
+                key={hexValue}
+                className="address-info"
+                onClick={this.navigateToAddressPage.bind(this, hexValue)}
+              >
                 <div className="info-container">
                   <span>
                     <FaRocket /> {name}
