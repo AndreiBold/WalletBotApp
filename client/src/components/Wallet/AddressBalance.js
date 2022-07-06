@@ -1,14 +1,9 @@
 import React, { Component } from "react";
-import Web3 from "web3/dist/web3.min.js";
+import Web3API from "../../config/web3Provider";
 
 class AddressBalance extends Component {
   state = {
     balance: "",
-    web3: new Web3(
-      new Web3.providers.HttpProvider(
-        process.env.REACT_APP_INFURA_ROPSTEN_HTTP_URL
-      )
-    ),
   };
 
     componentDidMount() {
@@ -16,8 +11,8 @@ class AddressBalance extends Component {
     }
 
   getAccountBalance = async (hexAddress) => {
-    const balance = await this.state.web3.eth.getBalance(hexAddress); //return in wei
-    const ethBalance = this.state.web3.utils.fromWei(
+    const balance = await Web3API.eth.getBalance(hexAddress); //return in wei
+    const ethBalance = Web3API.utils.fromWei(
       balance.toString(),
       "Ether"
     );

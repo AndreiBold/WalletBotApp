@@ -7,14 +7,17 @@ import Chatbot from "../Chatbot/Chatbot";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { Button } from "reactstrap";
 import EthereumAddresses from "../Wallet/EthereumAddresses";
+import Web3API from "../../config/web3Provider";
 
 class Home extends Component {
   state = {
     isChatRoomVisible: false,
+    totalBalance: 0,
   };
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
+    address: PropTypes.object.isRequired,
   };
 
   setChatRoomVisibility = () => {
@@ -23,12 +26,32 @@ class Home extends Component {
     });
   };
 
+  getTotalBalance = async (addresses) => {
+    var totalEth = 0;
+
+    for (let i = 0; i < addresses.length; i++) {
+      const balance = await Web3API.eth.getBalance(addresses[i].hexValue); //return in wei
+      const ethBalance = Web3API.utils.fromWei(balance.toString(), "Ether");
+      totalEth = totalEth + ethBalance;
+    }
+
+    this.setState({
+      totalBalance: Number(totalEth).toFixed(5),
+    });
+  };
+
+  async componentDidMount() {
+    await this.getTotalBalance(this.props.address.addresses);
+  }
+
   render() {
     const { isAuthenticated } = this.props;
 
     return isAuthenticated ? (
       <div>
-        <div className="total-balance" style={{ borderRadius: "9px" }}>Total balance: 1.2345 ETH</div>
+        <div className="total-balance" style={{ borderRadius: "9px" }}>
+          Total balance: {this.state.totalBalance} ETH
+        </div>
         <img
           className="wallpaper"
           alt="wallet"
@@ -70,6 +93,7 @@ class Home extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.user.isAuthenticated,
+  address: state.address,
 });
 
 export default connect(mapStateToProps, null)(Home);
