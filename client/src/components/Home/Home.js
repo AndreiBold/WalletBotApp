@@ -26,22 +26,47 @@ class Home extends Component {
     });
   };
 
+  // getTotalBalance = async (addresses) => {
+  //   var totalEth = 0;
+
+  //   for (let i = 0; i < addresses.length; i++) {
+  //     const balance = await Web3API.eth.getBalance(addresses[i].hexValue); //return in wei
+  //     const ethBalance = Web3API.utils.fromWei(balance.toString(), "Ether");
+  //     totalEth = totalEth + ethBalance;
+  //   }
+
+  //   this.setState({
+  //     totalBalance: Number(totalEth).toFixed(5),
+  //   });
+  // };
+
   getTotalBalance = async (addresses) => {
     var totalEth = 0;
+    var promises = [];
 
     for (let i = 0; i < addresses.length; i++) {
-      const balance = await Web3API.eth.getBalance(addresses[i].hexValue); //return in wei
-      const ethBalance = Web3API.utils.fromWei(balance.toString(), "Ether");
-      totalEth = totalEth + ethBalance;
+      promises.push(
+        Web3API.eth
+          .getBalance(addresses[i].hexValue)
+          .then((res) => {
+            let ethBalance = Web3API.utils.fromWei(res.toString(), "Ether");
+            totalEth = totalEth + ethBalance;
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      );
     }
 
-    this.setState({
-      totalBalance: Number(totalEth).toFixed(5),
+    await Promise.all(promises).then(() => {
+      this.setState({
+        totalBalance: Number(totalEth).toFixed(5),
+      });
     });
   };
 
-  async componentDidMount() {
-    await this.getTotalBalance(this.props.address.addresses);
+  componentDidUpdate() {
+    this.getTotalBalance(this.props.address.addresses);
   }
 
   render() {
