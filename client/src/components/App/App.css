@@ -6,11 +6,15 @@
   background: linear-gradient(to bottom right, #f9dd59, #fff0a8);
   padding-bottom: 90vh;
   height: 100%;
+  overflow-anchor: none;
 }
+
 #root {
   width: 100%;
   height: 100%;
+  overflow-anchor: none;
 }
+
 body {
   width: 100%;
   height: 100%;

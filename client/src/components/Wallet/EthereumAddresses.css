@@ -1,29 +1,23 @@
-.remove-btn {
-  margin-right: 0.5rem;
-  width: 2rem;
-  height: 2rem;
-  margin-top: 1rem;
-}
-
-.empty-contacts-wrapper, .agenda-contacts-wrapper {
+.wallet-addresses-wrapper {
   margin-top: 2rem;
 }
 
-.empty-contacts-section {
-  border: 1px solid #3393FF;
+.empty-wallet-section {
+  border: 1px solid #3393ff;
   background-color: beige;
   margin-left: 2rem;
   margin-right: 2rem;
+  font-weight: bold;
 }
 
-.contact-info {
+.address-info {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   font-weight: bold;
-  border: 1px solid #3393FF;
-  margin-right: 1rem;
+  border: 1px solid #3393ff;
   margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .info-container {
@@ -41,9 +35,6 @@ span {
   margin-left: 1rem;
 }
 
-.guest-message {
-  border: 1px solid #3393FF;
-  background-color: beige;
-  margin: 1rem;
-  font-weight: bold;
+.wallet-title {
+  margin-bottom: 1rem;
 }

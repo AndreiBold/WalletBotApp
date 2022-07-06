@@ -1,0 +1,22 @@
+.total-balance, .guest-message {
+  border: 1px solid #3393FF;
+  background-color: beige;
+  margin-top: 1rem;
+  margin-left: 5rem;
+  margin-right: 5rem;
+  font-weight: bold;
+}
+
+#chat-bubble {
+  margin-left: 24rem;
+}
+
+.chat-section {
+  margin-top: 2rem;
+}
+
+@media (max-width: 550px) {
+  .wallpaper {
+    margin-left: 0.5rem;
+  }
+}

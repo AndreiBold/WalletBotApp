@@ -1,5 +1,5 @@
 .account-details {
-  border: 1px solid brown;
+  border: 1px solid #3393FF;
   background-color: beige;
   margin: 4rem 2rem;
 }
@@ -35,5 +35,12 @@
 }
 
 hr {
-  background-color: brown;
+  background-color: #3393FF;
+}
+
+.guest-message {
+  border: 1px solid #3393FF;
+  background-color: beige;
+  margin: 1rem;
+  font-weight: bold;
 }

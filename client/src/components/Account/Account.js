@@ -25,8 +25,8 @@ class Account extends Component {
     const { userName, email, isTwoFactorAuthEnabled } = this.props.userData;
     const { contacts } = this.props.contact;
     const { isAuthenticated } = this.props;
-    console.log('isAuth: ' + isAuthenticated);
-    return  isAuthenticated ? (
+    console.log("isAuth: " + isAuthenticated);
+    return isAuthenticated ? (
       <Card className="account-details">
         <h3>
           <FaUserCircle /> My Account Details
@@ -54,7 +54,9 @@ class Account extends Component {
         </div>
       </Card>
     ) : (
-      <h3>Please login in order to see your account details</h3>
+      <div className="guest-message">
+        Please <a href="/login">login</a> in order to see your account details!
+      </div>
     );
   }
 }
@@ -62,7 +64,7 @@ class Account extends Component {
 const mapStateToProps = (state) => ({
   userData: state.user.userData,
   contact: state.contact,
-  isAuthenticated: state.user.isAuthenticated
+  isAuthenticated: state.user.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { loadUser })(Account);

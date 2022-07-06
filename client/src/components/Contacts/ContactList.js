@@ -17,6 +17,7 @@ class ContactList extends Component {
     getContacts: PropTypes.func.isRequired,
     contact: PropTypes.object.isRequired,
     removeContact: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
   };
 
   componentDidMount() {
@@ -104,9 +105,9 @@ class ContactList extends Component {
         </div>
       )
     ) : (
-      <h3>
-        Please login in order to see your contacts agenda or add new contacts
-      </h3>
+      <div className="guest-message">
+        Please <a href="/login">login</a> in order to see your contacts agenda or add new contacts
+      </div>
     );
   }
 }

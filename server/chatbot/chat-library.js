@@ -3,7 +3,7 @@ const { dockStart } = require("@nlpjs/basic");
 const trainChatbot = async () => {
     const dock = await dockStart({ use: ["Basic"] });
     const nlp = dock.get("nlp");
-    await nlp.addCorpus("./chatbot/corpus.json");
+    await nlp.addCorpus("../chatbot/corpus.json");
     await nlp.train();
   
     return nlp;
@@ -71,13 +71,13 @@ const transactionDetails = (res, context) => {
     
 }
 
-const processChat = async (message, context, nlpManager) => {
+const processChat = async (message, context, nlpManager, user) => {
 
     const res = await nlpManager.process("en", message);
 
 
     if(res && res.intent) {
-        if(res.intent === "greetings.hello" || res.intent === "greetings.bye" || res.intent === "feedback.thank") {
+        if(res.intent === "greetings.hello" || res.intent === "greetings.bye" || res.intent === "feedback.thank" || res.intent.includes("faq")) {
             return {
                 response: res.answer,
                 context: res.intent

@@ -10,7 +10,7 @@ router.post("/", auth, async (req, res) => {
     if (!user) throw Error("User not found");
 
     let { message, context } = req.body;
-    let manager = await chatLib.trainJarvis();
+    let manager = await chatLib.trainChatbot();
     let response = await chatLib.processChat(message, context, manager, user);
 
     console.log(response);
