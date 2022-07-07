@@ -1,104 +1,156 @@
 const { dockStart } = require("@nlpjs/basic");
 
 const trainChatbot = async () => {
-    const dock = await dockStart({ use: ["Basic"] });
-    const nlp = dock.get("nlp");
-    await nlp.addCorpus("../chatbot/corpus.json");
-    await nlp.train();
-  
-    return nlp;
+  const dock = await dockStart({ use: ["Basic"] });
+  const nlp = dock.get("nlp");
+  await nlp.addCorpus("./chatbot/corpus.json");
+  await nlp.train();
+
+  return nlp;
 };
 
-const transactionDetails = (res, context) => {
-    var state = res.intent;
-    var receiverAddress = "";
-    var etherAmount = "";
-    try {
-        switch(state) {
-            case "action.transaction":
-                var isTransaction = res.utterance.includes("transaction") || res.utterance.includes("payment") ? true : false;
-                if(isTransaction) {
-                    return {
-                        response: res.answer,
-                        context: {
-                            state: "transaction.receiverAddress"
-                        }
-                    }
-                } else {
-                    return {
-                        response: "I can only help you make secure transactions",
-                        context: context
-                    }
-                }
-            case "transaction.receiverAddress":
-                var isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(res.utterance) ? true : false;
-                if(isValidAddress) {
-                    receiverAddress = res.utterance.match(/^0x[a-fA-F0-9]{40}$/)[0];
-                    return {
-                        response: res.answer,
-                        context: {
-                            state: "transaction.etherAmount",
-                            receiverAddress: receiverAddress
-                        }
-                    }
-                } else {
-                    return {
-                        response: "Please give me a valid address",
-                        context: context
-                    }
-                }
-            case "transaction.etherAmount":
-                etherAmount =  res.utterance.match(/[\d\.]+/)[0];
-                console.log('ANSWER: ', res.answer);
-                console.log('AMOUNT: ', etherAmount);
-                console.log('RECEIVER: ', receiverAddress);
-                if(etherAmount && parseFloat(etherAmount) > 0) {
-                    receiverAddress = context.receiverAddress;
-                    return {
-                        response: res.answer + " Sent " + etherAmount + " Ether to address " + receiverAddress,
-                        context: {...context, etherAmount: etherAmount}
-                    }
-                } else {
-                    return {
-                        response: 'Please provide a valid amount of Ether',
-                        context: context
-                    }
-                }
+const cryptoActions = (res, context) => {
+  var state = res.intent;
+  try {
+    switch (state) {
+      case "create.address":
+        var isCreate =
+          res.utterance.includes("create") ||
+          res.utterance.includes("new") ||
+          res.utterance.includes("wallet")
+            ? true
+            : false;
+        if (isCreate) {
+          console.log("creaza wallet");
+          return {
+            response: res.answer,
+            context: {
+              state: "address.name",
+            },
+          };
+        } else {
+          return {
+            response: "I can only help you create ethereum accounts",
+            context: context,
+          };
         }
-    } catch (err) {
-        console.warn(err.stack);
+      case "address.name":
+        var isValidAddressName = res.utterance.includes("Account")
+          ? true
+          : false;
+        if (isValidAddressName) {
+          return {
+            response: res.answer,
+            context: {
+              state: "secret.masterPin",
+              addressName: res.utterance,
+            },
+          };
+        } else {
+          return {
+            response: "Please give your account a valid name",
+            context: context,
+          };
+        }
+      case "secret.masterPin":
+        var isValidPin = res.utterance.length == 6 ? true : false;
+        if (isValidPin) {
+          return {
+            response: res.answer,
+            context: { ...context, masterPin: res.utterance },
+          };
+        } else {
+          return {
+            response: "Please give me a 6 digit master pin",
+            context: context,
+          };
+        }
+      case "send.ether":
+        var isTransaction =
+          res.utterance.includes("send") ||
+          res.utterance.includes("transaction") ||
+          res.utterance.includes("payment")
+            ? true
+            : false;
+        if (isTransaction) {
+          return {
+            response: res.answer,
+            context: {
+              state: "receiver.name",
+            },
+          };
+        } else {
+          return {
+            response: "I can only help you send ethers",
+            context: context,
+          };
+        }
+      case "receiver.name":
+        var isValidReceiverName =
+          res.utterance && res.utterance !== "" ? true : false;
+        if (isValidReceiverName) {
+          return {
+            response: res.answer,
+            context: {
+              state: "ether.amount",
+              receiverName: res.utterance,
+            },
+          };
+        } else {
+          return {
+            response: "Please give me a valid contact name",
+            context: context,
+          };
+        }
+      case "ether.amount":
+        if (res.utterance && parseFloat(res.utterance) > 0) {
+          return {
+            response:
+              res.answer +
+              " Sent " +
+              res.utterance +
+              " ETH to " +
+              context.receiverName,
+            context: { ...context, etherAmount: res.utterance },
+          };
+        }
     }
-    
-}
+  } catch (err) {
+    console.warn(err.stack);
+  }
+};
 
 const processChat = async (message, context, nlpManager, user) => {
+  const res = await nlpManager.process("en", message);
 
-    const res = await nlpManager.process("en", message);
-
-
-    if(res && res.intent) {
-        if(res.intent === "greetings.hello" || res.intent === "greetings.bye" || res.intent === "feedback.thank" || res.intent.includes("faq")) {
-            return {
-                response: res.answer,
-                context: res.intent
-            }
-        } else if(res.intent === 'None') {
-             return {
-                response: "Say that again, will you?",
-                context: context
-             }
-        } else {
-            return transactionDetails(res, context);
-        }
+  if (res && res.intent) {
+    if (
+      res.intent === "open" ||
+      res.intent === "close" ||
+      res.intent === "thank" ||
+      res.intent.includes("faq")
+    ) {
+      return {
+        response: res.answer + ", " + user.userName,
+        context: res.intent,
+      };
+    } else if (res.intent === "None") {
+      return {
+        response: "Say that again, will you?",
+        context: context,
+      };
     } else {
-        return {
-            response: "Something went wrong. I'll call my dev to solve this",
-            context: context
-        }
+      return cryptoActions(res, context);
     }
-}
+  } else {
+    return {
+      response: "Something went wrong. I'll call my dev to solve this",
+      context: context,
+    };
+  }
+};
 
 module.exports = {
-    trainChatbot,
-    processChat
-}
+  trainChatbot,
+  processChat,
+};

@@ -4,8 +4,8 @@
   "description": "Ethereum wallet chatbot app",
   "main": "server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "server": "nodemon server/server.js",
+    "start": "node server.js",
+    "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "client-install": "npm install --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""

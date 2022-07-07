@@ -3,19 +3,19 @@
     "locale": "en-US",
     "data": [
         {
-            "intent": "greetings.hello",
-            "utterances": ["hello", "hi", "howdy", "aloha", "hey"],
-            "answers": ["Hey there!", "Greetings!", "Hello there!"]
+            "intent": "open",
+            "utterances": ["hello", "hi", "howdy", "hey"],
+            "answers": ["Hey there", "Greetings", "Hello there"]
         },
         {
-            "intent": "greetings.bye",
-            "utterances": ["goodbye", "sayonara", "I'm out", "till next time", "bye"],
-            "answers": ["See you soon!", "Bye human!", "Ciao amigo!"]
+            "intent": "close",
+            "utterances": ["goodbye", "sayonara", "till next time", "bye"],
+            "answers": ["See you soon", "Bye human", "Ciao amigo"]
         },
         {
-            "intent": "feedback.thank",
+            "intent": "thank",
             "utterances": [ 
-                "nice thank you",
+                "thank you",
                 "thanks buddy",
                 "cheers"],
             "answers": [
@@ -25,7 +25,32 @@
               ]
         },
         {
-            "intent": "action.createAddress",
+            "intent": "faq#1",
+            "utterances": [
+                "how much is one ether?",
+                "convert 1 ETH to USD?",
+                "What is the price of an ether"
+            ],
+            "answers": [
+                "One ether is 1050 USD",
+                "1 ETH = 1050 USD",
+                "One ether is about 1050 bucks"
+            ]
+        },
+        {
+            "intent": "faq#2",
+            "utterances": [
+                "where is my private key?",
+                "have you seen my private key?",
+                "I can't find my private key"
+            ],
+            "answers": [
+                "Your private key is store in a file on your device",
+                "Check on your device. Maybe downloads"
+            ]
+        },
+        {
+            "intent": "create.address",
             "utterances": [
                 "create an account",
                 "new ethereum address",
@@ -63,97 +88,43 @@
             ]
         },
         {
-            "intent": "action.transaction",
+            "intent": "send.ether",
             "utterances": [ 
-                "I wanna make a transaction",
+                "I want to make a transaction",
                 "I wanna send some ether",
-                "make a payment",
-                "send money",
-                "pay ethers to a contact",
-                "pay someone"
-            ],
+                "make a payment"],
             "answers": [
-                "Sure. Just tell me your contact's name",
-                "Allrighty, who's the receiver?",
-                "What's your contact's name?",
-                "To whom?"
+                "Sure. Just tell me the receiver's name",
+                "Allrighty, at what contact do you send?"
               ]
         },
         {
-            "intent": "transaction.receiverAddress",
+            "intent": "receiver.name",
             "utterances": [ 
-                "His name is ",
-                "Her name is ",
-                "It is ",
-                "Receiver is ",
-                "The contact is ",
-                "To ",
-                "send to "
+                "Obi-wan Kenobi",
+                "Jon Snow",
+                "Darth Vader",
+                "Luke Skywalker",
+                "Mike",
+                "Johana"
               ],
             "answers": [
                 "Cool. Now tell me the amount of ether",
-                "And how much ether do you want to send?",
-                "What about the ether amount?",
-                "Perfect. Now tell me the ether amount"
+                "And how much ether do you want to send?"
               ]
         },
         {
-            "intent": "transaction.etherAmount",
+            "intent": "ether.amount",
             "utterances": [
                 "0.1", 
                 "0.2",
+                "0.6",
                 "0.3",
                 "0.4",
-                "0.5",
-                "0.6",
-                "0.7",
-                "0.8",
-                "0.9",
-                "1",
-                "1.1",
-                "1.2"],
+                "0.05"],
             "answers": [
-                "Thanks. Processing transaction...",
-                "Thank you. Your transaction is proccessed...",
-                "Roger that. Transaction should apear on the page shorly"
+                "Thanks. Processing transaction..."
               ]
-        },
-        {
-            "intent": "faq.etherPrice",
-            "utterances": [
-                "how much is one ether?",
-                "convert 1 ETH to USD?",
-                "What is the price of an ether"
-            ],
-            "answers": [
-                "One ether is 1050 USD",
-                "1 ETH = 1050 USD",
-                "One ether is about 1050 bucks"
-            ]
-        },
-        {
-            "intent": "faq.wherePrivKey",
-            "utterances": [
-                "where is my private key?",
-                "have you seen my private key?",
-                "I can't find my private key"
-            ],
-            "answers": [
-                "Your private key is store in a file on your device",
-                "Check on your device. Maybe downloads"
-            ]
-        },
-        {
-            "intent": "faq.myBalance",
-            "utterances": [
-                "How much money do I have?",
-                "Tell me the balance of this account?",
-                "How much ether is on this account?"
-            ],
-            "answers": [
-                "You have ",
-                "Your balance is "
-            ]
         }
     ]
 }
