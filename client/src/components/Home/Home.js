@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import "./Home.css";
 import Chatbot from "../Chatbot/Chatbot";
-import { FaFacebookMessenger } from "react-icons/fa";
+import { FaFacebookMessenger, FaWallet } from "react-icons/fa";
 import { Button } from "reactstrap";
 import EthereumAddresses from "../Wallet/EthereumAddresses";
 import Web3API from "../../config/web3Provider";
@@ -26,21 +26,7 @@ class Home extends Component {
     });
   };
 
-  // getTotalBalance = async (addresses) => {
-  //   var totalEth = 0;
-
-  //   for (let i = 0; i < addresses.length; i++) {
-  //     const balance = await Web3API.eth.getBalance(addresses[i].hexValue); //return in wei
-  //     const ethBalance = Web3API.utils.fromWei(balance.toString(), "Ether");
-  //     totalEth = totalEth + ethBalance;
-  //   }
-
-  //   this.setState({
-  //     totalBalance: Number(totalEth).toFixed(5),
-  //   });
-  // };
-
-  getTotalBalance = async (addresses) => {
+  getTotalBalance = (addresses) => {
     var totalEth = 0;
     var promises = [];
 
@@ -58,22 +44,24 @@ class Home extends Component {
       );
     }
 
-    await Promise.all(promises).then(() => {
+    Promise.all(promises).then(() => {
       this.setState({
         totalBalance: Number(totalEth).toFixed(5),
       });
     });
   };
 
-  componentDidUpdate() {
-    this.getTotalBalance(this.props.address.addresses);
-  }
-
   render() {
     const { isAuthenticated } = this.props;
 
     return isAuthenticated ? (
       <div>
+        <Button
+        color="primary"
+        size="sm"
+        className="total-balance-btn"
+        onClick={() => this.getTotalBalance(this.props.address.addresses)}
+        >Get Total <FaWallet /></Button>
         <div className="total-balance" style={{ borderRadius: "9px" }}>
           Total balance: {this.state.totalBalance} ETH
         </div>

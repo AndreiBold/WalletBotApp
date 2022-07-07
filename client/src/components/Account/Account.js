@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loadUser } from "../../actions/userActions";
+import { getContacts } from "../../actions/contactActions";
 import { Card } from "reactstrap";
 import { FaCheckCircle, FaTimesCircle, FaUserCircle } from "react-icons/fa";
 import "./Account.css";
@@ -12,10 +13,12 @@ class Account extends Component {
     loadUser: PropTypes.func,
     contact: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool,
+    getContacts: PropTypes.func
   };
 
   componentDidMount() {
     this.props.loadUser();
+    this.props.getContacts();
     console.log(this.props.userData);
     console.log(this.props.contact.contacts);
     console.log(this.props.isAuthenticated);
@@ -67,4 +70,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.user.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { loadUser })(Account);
+export default connect(mapStateToProps, { loadUser, getContacts })(Account);

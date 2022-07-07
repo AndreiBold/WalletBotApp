@@ -15,6 +15,10 @@
   margin-top: 2rem;
 }
 
+.total-balance-btn {
+  margin-top: 1rem;
+}
+
 @media (max-width: 550px) {
   .wallpaper {
     margin-left: 0.5rem;
