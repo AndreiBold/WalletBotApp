@@ -11,6 +11,7 @@ app.use("/users", routers.user);
 app.use("/contacts", routers.contact);
 app.use("/chat", routers.chat);
 app.use("/addresses", routers.address);
+app.use("/transactions", routers.transaction);
 
 const https = require("https");
 const fs = require("fs");

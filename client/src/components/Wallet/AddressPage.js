@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Container, ListGroup, ListGroupItem } from "reactstrap";
+import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { getAddress } from "../../actions/addressActions";
 import PropTypes from "prop-types";
@@ -15,6 +15,7 @@ import {
 import Web3API from "../../config/web3Provider";
 import "./AddressPage.css";
 import Chatbot from "../Chatbot/Chatbot";
+import Transactions from "./Transactions";
 
 class AddressPage extends Component {
   state = {
@@ -79,7 +80,7 @@ class AddressPage extends Component {
     const { isAuthenticated } = this.props;
     const { selectedAddress } = this.props.address;
 
-    return isAuthenticated ? (
+    return isAuthenticated && selectedAddress != undefined ? (
       <div className="address-page-container">
         <Button
           color="dark"
@@ -123,6 +124,9 @@ class AddressPage extends Component {
             <FaFacebookMessenger />
           </Button>
           <Chatbot show={this.state.isChatRoomVisible} />
+        </div>
+        <div className="transactions-section">
+          <Transactions hexAddress={selectedAddress.hexValue} addressName={selectedAddress.name} />
         </div>
       </div>
     ) : (

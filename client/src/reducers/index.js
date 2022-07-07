@@ -4,11 +4,13 @@ import errorReducer from "./error-reducer";
 import contactReducer from "./contact-reducer";
 import chatReducer from "./chat-reducer";
 import addressReducer from "./address-reducer";
+import transactionReducer from "./transaction-reducer"
 
 export default combineReducers({
   user: userReducer,
   error: errorReducer,
   contact: contactReducer,
   chat: chatReducer,
-  address: addressReducer
+  address: addressReducer,
+  transaction: transactionReducer
 });

@@ -1,0 +1,47 @@
+.address-transactions-wrapper {
+  margin-top: 2rem;
+}
+
+.empty-transactions-section {
+  border: 1px solid #3393ff;
+  background-color: beige;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  font-weight: bold;
+}
+
+.transaction-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  font-weight: bold;
+  border: 1px solid #3393ff;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1 1 0;
+}
+
+span {
+  margin-bottom: 0.5rem;
+}
+
+.copy-icon {
+  margin-left: 1rem;
+}
+
+.transactions-title {
+  margin-bottom: 1rem;
+}
+
+.receive, .send {
+  margin-right: 0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
