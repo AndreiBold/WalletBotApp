@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Container, ListGroup, ListGroupItem } from "reactstrap";
 import { connect } from "react-redux";
 import { getTransactions } from "../../actions/transactionActions";
-import { getContacts } from "../../actions/contactActions";
 import PropTypes from "prop-types";
 import { GrTransaction } from "react-icons/gr";
 import "./Transactions.css";
@@ -12,35 +11,14 @@ class Transactions extends Component {
   static propTypes = {
     getTransactions: PropTypes.func.isRequired,
     transaction: PropTypes.object.isRequired,
-    getContacts: PropTypes.func.isRequired,
-    contact: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
     this.props.getTransactions(this.props.hexAddress);
-    this.props.getContacts();
-  }
-
-  getSenderReceiverName(contacts, hexValue) {
-    if (contacts && contacts.length) {
-      var name = "";
-      var contactName = contacts.find(
-        (contact) => contact.hexAddress.toLowerCase() === hexValue.toLowerCase()
-      ).contactName;
-
-      if (contactName) {
-        name = contactName;
-      } else {
-        name = hexValue;
-      }
-
-      return <span>{name}</span>;
-    }
   }
 
   render() {
     const { transactions } = this.props.transaction;
-    console.log(this.props.contact.contacts);
 
     return transactions.length > 0 ? (
       <div className="address-transactions-wrapper">
@@ -85,9 +63,8 @@ class Transactions extends Component {
 
 const mapStateToProps = (state) => ({
   transaction: state.transaction,
-  contact: state.contact,
 });
 
-export default connect(mapStateToProps, { getTransactions, getContacts })(
+export default connect(mapStateToProps, { getTransactions })(
   Transactions
 );
