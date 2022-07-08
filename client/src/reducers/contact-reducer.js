@@ -6,12 +6,15 @@ import {
   DELETE_CONTACT_SUCCESS,
   DELETE_CONTACT_FAIL,
   CONTACTS_LOADING,
+  GET_CONTACT_BY_NAME_SUCCESS,
+  GET_CONTACT_BY_NAME_FAIL
 } from "../actions/types";
 
 const INITIAL_STATE = {
   contacts: [],
   loading: false,
   isAdded: false,
+  contactAddress: "" 
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -39,6 +42,11 @@ export default function (state = INITIAL_STATE, action) {
         contacts: [action.payload.newContact, ...state.contacts],
         isAdded: true,
       };
+    case GET_CONTACT_BY_NAME_SUCCESS:
+      return {
+        ...state,
+        contactAddress: action.payload.contactAgendaAddress
+      }
     case CONTACTS_LOADING:
       return {
         ...state,
@@ -47,6 +55,7 @@ export default function (state = INITIAL_STATE, action) {
     case GET_CONTACTS_FAIL:
     case ADD_CONTACT_FAIL:
     case DELETE_CONTACT_FAIL:
+    case GET_CONTACT_BY_NAME_FAIL:
       return {
         ...state,
         loading: false,

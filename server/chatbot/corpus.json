@@ -106,7 +106,8 @@
                 "Darth Vader",
                 "Luke Skywalker",
                 "Mike",
-                "Johana"
+                "Johana",
+                "Yoda"
               ],
             "answers": [
                 "Cool. Now tell me the amount of ether",
@@ -124,6 +125,16 @@
                 "0.05"],
             "answers": [
                 "Thanks. Processing transaction..."
+              ]
+        },
+        {
+            "intent": "hack",
+            "utterances": [
+                "can I see the transaction?",
+                "tell me about the transaction"
+            ],
+            "answers": [
+                "It just got added to your dashboard"
               ]
         }
     ]

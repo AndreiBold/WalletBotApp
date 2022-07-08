@@ -123,7 +123,7 @@ class AddressPage extends Component {
           >
             <FaFacebookMessenger />
           </Button>
-          <Chatbot show={this.state.isChatRoomVisible} />
+          <Chatbot show={this.state.isChatRoomVisible} userHexAddress={localStorage.getItem("eth-address")}/>
         </div>
         <div className="transactions-section">
           <Transactions hexAddress={selectedAddress.hexValue} addressName={selectedAddress.name} />

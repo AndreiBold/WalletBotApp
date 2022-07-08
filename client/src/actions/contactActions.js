@@ -7,6 +7,8 @@ import {
   DELETE_CONTACT_SUCCESS,
   DELETE_CONTACT_FAIL,
   CONTACTS_LOADING,
+  GET_CONTACT_BY_NAME_SUCCESS,
+  GET_CONTACT_BY_NAME_FAIL,
 } from "./types";
 import { tokenConfig } from "./userActions";
 import client from "../config/config";
@@ -19,13 +21,12 @@ export const getContacts = () => (dispatch, getState) => {
   client
     .get("contacts/", tokenConfig(getState))
     .then((res) => {
-      console.log('RES CONTACTS: ' + res);
+      console.log("RES CONTACTS: " + res);
       dispatch({
         type: GET_CONTACTS_SUCCESS,
         payload: res.data,
-      })
-    }
-    )
+      });
+    })
     .catch((err) => {
       console.log(err);
       dispatch(
@@ -75,34 +76,60 @@ export const addContact =
   };
 
 // Remove contact
-export const removeContact =
-  (contactId) =>
-  (dispatch, getState) => {
-    console.log("contactId: " + contactId);
+export const removeContact = (contactId) => (dispatch, getState) => {
+  console.log("contactId: " + contactId);
 
-    client
-      .delete(`contacts/remove/${contactId}`, tokenConfig(getState))
-      .then((res) => {
-        console.log("RES: ", res);
-        dispatch({
-          type: DELETE_CONTACT_SUCCESS,
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(
-          returnErrors(
-            err.response.data,
-            err.response.status,
-            "DELETE_CONTACT_FAIL"
-          )
-        );
-        dispatch({
-          type: DELETE_CONTACT_FAIL,
-        });
+  client
+    .delete(`contacts/remove/${contactId}`, tokenConfig(getState))
+    .then((res) => {
+      console.log("RES: ", res);
+      dispatch({
+        type: DELETE_CONTACT_SUCCESS,
+        payload: res.data,
       });
-  };
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          "DELETE_CONTACT_FAIL"
+        )
+      );
+      dispatch({
+        type: DELETE_CONTACT_FAIL,
+      });
+    });
+};
+
+// Get contact by name
+export const getContact = (name) => (dispatch, getState) => {
+  console.log("name: " + name);
+
+  client
+    .get(`contacts/${name}`, tokenConfig(getState))
+    .then((res) => {
+      console.log("RES: ", res);
+      dispatch({
+        type: GET_CONTACT_BY_NAME_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          "GET_CONTACT_BY_NAME_FAIL"
+        )
+      );
+      dispatch({
+        type: GET_CONTACT_BY_NAME_FAIL,
+      });
+    });
+};
 
 export const setContactsLoading = () => {
   return {

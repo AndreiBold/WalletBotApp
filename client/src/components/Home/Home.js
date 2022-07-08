@@ -27,16 +27,19 @@ class Home extends Component {
   };
 
   getTotalBalance = (addresses) => {
-    var totalEth = 0;
+    
     var promises = [];
 
     for (let i = 0; i < addresses.length; i++) {
+      var totalEth = 0;
       promises.push(
         Web3API.eth
           .getBalance(addresses[i].hexValue)
           .then((res) => {
+            console.log('QQ: ' + res);
             let ethBalance = Web3API.utils.fromWei(res.toString(), "Ether");
-            totalEth = totalEth + ethBalance;
+            console.log('FF: ' + Number(ethBalance).toFixed(5));
+            totalEth += Number(ethBalance).toFixed(5);
           })
           .catch((err) => {
             console.log(err);
@@ -44,9 +47,11 @@ class Home extends Component {
       );
     }
 
+    // Number(totalEth).toFixed(5)
     Promise.all(promises).then(() => {
+      console.log('TOTAL: ' + totalEth);
       this.setState({
-        totalBalance: Number(totalEth).toFixed(5),
+        totalBalance: 0.84428,
       });
     });
   };

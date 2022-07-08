@@ -111,8 +111,18 @@ const cryptoActions = (res, context) => {
               res.utterance +
               " ETH to " +
               context.receiverName,
-            context: { ...context, etherAmount: res.utterance },
+            context: { ...context, etherAmount: res.utterance, state: "hack" },
           };
+        } else {
+          return {
+            response: "Please provide a positive amount of ether",
+            context: context
+          }
+        }
+      case "hack":
+        return {
+          response: res.answer,
+          context: {...context, hack: true}
         }
     }
   } catch (err) {

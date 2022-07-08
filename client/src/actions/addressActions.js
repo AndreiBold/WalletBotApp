@@ -43,7 +43,7 @@ export const getAddresses = () => (dispatch, getState) => {
 };
 
 // Add address
-export const addAdrress =
+export const addAddress =
   ({ hexValue, name }) =>
   (dispatch, getState) => {
     console.log("hexValue: " + hexValue);

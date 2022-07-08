@@ -108,10 +108,10 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// @route  GET contacts/:hexValue
+// @route  GET contacts/:name
 // @desc   Get contact's name by providing its hexValue
 // @access Private
-router.get("/:hexValue", auth, async (req, res) => {
+router.get("/:name", auth, async (req, res) => {
   try {
     //check if user exists
     const user = await models.User.findByPk(req.user.userId);
@@ -120,18 +120,18 @@ router.get("/:hexValue", auth, async (req, res) => {
     // get desired contact
     const contact = await models.Contact.findOne({
       where: {
-        hexAddress: req.params.hexValue,
+        contactName: req.params.name,
         userId: user.userId,
       },
     });
 
-    var contactName = "";
+    // var contactName = "";
 
-    if (contact.contactName) {
-      contactName = contact.contactName;
-    } 
+    // if (contact.contactName) {
+    //   contactName = contact.contactName;
+    // } 
 
-    res.status(201).json({ contactAgendaName: contactName });
+    res.status(201).json({ contactAgendaAddress: contact.hexAddress });
   } catch (e) {
     res.status(400).json({ message: e.message });
   }
